@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reliance Retail Tax Invoice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="config-panel">
+    <h3>Invoice Configuration</h3>
+
+    <div class="invoice-type-selector">
+      <label>
+        <input type="radio" name="invoiceType" value="telecom" checked> Telecom Bill
+      </label>
+      <label>
+        <input type="radio" name="invoiceType" value="fuel"> Fuel Bill
+      </label>
+    </div>
+
+    <!-- Telecom Configuration -->
+    <div id="telecomConfig" class="config-group">
+      <div class="config-section">
+        <h4>Company Info</h4>
+        <label for="configCompanyName">Company Name</label>
+        <input type="text" id="configCompanyName">
+        <label for="configCompanyAddr1">Company Address Line 1</label>
+        <input type="text" id="configCompanyAddr1">
+        <label for="configCompanyAddr2">Company Address Line 2</label>
+        <input type="text" id="configCompanyAddr2">
+      </div>
+
+      <div class="config-section">
+        <h4>Invoice Details</h4>
+        <label for="configInvoiceNo">Invoice No</label>
+        <input type="text" id="configInvoiceNo">
+        <label for="configPanNo">PAN No</label>
+        <input type="text" id="configPanNo">
+        <label for="configOrderRef">Order Ref. No</label>
+        <input type="text" id="configOrderRef">
+        <label for="configModeOfPayment">Mode of Payment</label>
+        <input type="text" id="configModeOfPayment">
+        <label for="configDateTime">Invoice Date & Time</label>
+        <input type="text" id="configDateTime">
+        <label for="configGstNo">GST No</label>
+        <input type="text" id="configGstNo">
+        <label for="configPaymentRef">Payment Ref. No</label>
+        <input type="text" id="configPaymentRef">
+      </div>
+
+      <div class="config-section">
+        <h4>Customer Details</h4>
+        <label for="configCustomerName">Customer Name</label>
+        <input type="text" id="configCustomerName">
+        <label for="configJioNumber">Jio Number</label>
+        <input type="text" id="configJioNumber">
+        <label for="configPlaceOfSupply">Place of Supply</label>
+        <input type="text" id="configPlaceOfSupply">
+        <label for="configCustomerAddr1">Customer Address Line 1</label>
+        <input type="text" id="configCustomerAddr1">
+        <label for="configCustomerAddr2">Customer Address Line 2</label>
+        <input type="text" id="configCustomerAddr2">
+      </div>
+
+      <div class="config-section">
+        <h4>Items</h4>
+        <div id="itemsEditor" class="items-editor">
+          <!-- Item rows will be added here by JavaScript -->
+        </div>
+        <button id="addItemButton" class="action-button">Add Item</button>
+      </div>
+    </div>
+
+    <!-- Fuel Configuration -->
+    <div id="fuelConfig" class="config-group hidden">
+      <!-- Batch Generation -->
+      <div class="config-section batch-gen-section">
+        <h4>Batch Auto Generate</h4>
+        
+        <label for="batchFromDate">From Date</label>
+        <input type="date" id="batchFromDate">
+        <label for="batchToDate">To Date</label>
+        <input type="date" id="batchToDate">
+        
+        <div class="batch-input-row">
+          <div class="batch-input-col">
+            <label for="batchRateMin">Price Min (Rs)</label>
+            <input type="number" id="batchRateMin" value="101" step="0.01">
+          </div>
+          <div class="batch-input-col">
+            <label for="batchRateMax">Price Max (Rs)</label>
+            <input type="number" id="batchRateMax" value="105" step="0.01">
+          </div>
+        </div>
+
+        <div class="batch-input-row">
+          <div class="batch-input-col">
+            <label for="batchAmountMin">Amount Min (Rs)</label>
+            <input type="number" id="batchAmountMin" value="7000" step="1">
+          </div>
+          <div class="batch-input-col">
+            <label for="batchAmountMax">Amount Max (Rs)</label>
+            <input type="number" id="batchAmountMax" value="14000" step="1">
+          </div>
+        </div>
+
+        <label for="batchCount">Number of Bills</label>
+        <input type="number" id="batchCount" value="1" min="1">
+        
+        <button type="button" id="btnBatchGenerate" class="action-button btn-batch-generate">Batch Generate & Save</button>
+      </div>
+
+      <div class="config-section">
+        <h4>Station Info</h4>
+        <label for="fuelStationName">Station Name</label>
+        <input type="text" id="fuelStationName">
+        <label for="fuelStationAddr1">Address Line 1</label>
+        <input type="text" id="fuelStationAddr1">
+        <label for="fuelStationAddr2">Address Line 2</label>
+        <input type="text" id="fuelStationAddr2">
+        <label for="fuelTelNo">Tel. No.</label>
+        <input type="text" id="fuelTelNo">
+      </div>
+
+      <div class="config-section">
+        <h4>Transaction Details</h4>
+        <label for="fuelInvNo" class="config-label-with-button">
+          Inv. No
+          <button type="button" id="btnAutoGenFuelInvNo" class="action-button btn-auto-gen">Auto Generate</button>
+        </label>
+        <input type="text" id="fuelInvNo">
+        <label for="fuelDate">Date</label>
+        <input type="text" id="fuelDate">
+        <label for="fuelTime">Time</label>
+        <input type="text" id="fuelTime">
+        <label for="fuelLocalId">Local Id</label>
+        <input type="text" id="fuelLocalId">
+        <label for="fuelFipNo">FIP No.</label>
+        <input type="text" id="fuelFipNo">
+        <label for="fuelNozzleNo">Nozzle No.</label>
+        <input type="text" id="fuelNozzleNo">
+        <label for="fuelProduct">Product (e.g. Petrol)</label>
+        <input type="text" id="fuelProduct">
+        <label for="fuelDensity">Density (Kg/Cu.mtr)</label>
+        <input type="text" id="fuelDensity">
+        <label for="fuelRate">Rate (Rs/L)</label>
+        <input type="number" id="fuelRate" step="0.01">
+        <label for="fuelAmount">Amount (Rs)</label>
+        <input type="number" id="fuelAmount" step="0.01">
+        <label for="fuelVolume">Volume (L) [Auto-calc]</label>
+        <input type="number" id="fuelVolume" step="0.01" readonly>
+      </div>
+
+      <div class="config-section">
+        <h4>Customer & Tax</h4>
+        <label for="fuelVehicleNo">Vehicle No</label>
+        <input type="text" id="fuelVehicleNo">
+        <label for="fuelMobileNo">Mobile No</label>
+        <input type="text" id="fuelMobileNo">
+        <label for="fuelCstNo">CST No</label>
+        <input type="text" id="fuelCstNo">
+        <label for="fuelLstNo">LST No</label>
+        <input type="text" id="fuelLstNo">
+        <label for="fuelVatNo">VAT No</label>
+        <input type="text" id="fuelVatNo">
+      </div>
+
+
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="action-buttons">
+      <button id="saveImageButton" class="action-button">Save as Image</button>
+      <button id="printButton" class="action-button">Print</button>
+    </div>
+
+    <!-- Telecom Invoice Container -->
+    <div id="telecomInvoice" class="invoice-container">
+      <!-- Header -->
+      <div class="header">
+        <h1 id="companyName"></h1>
+        <div class="address" id="companyAddress">
+        </div>
+        <div class="original-label">(Original for Recipient)</div>
+      </div>
+
+      <!-- Tax Invoice Title -->
+      <div class="tax-invoice-title">
+        Tax Invoice
+      </div>
+
+      <!-- Invoice Details Section -->
+      <div class="invoice-details">
+        <div class="left-column">
+          <div class="detail-row">
+            <span class="label">Invoice No :</span>
+            <span class="value" id="invoiceNo"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">PAN No :</span>
+            <span class="value" id="panNo"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Order Ref. No. :</span>
+            <span class="value" id="orderRef"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Mode of Payment :</span>
+            <span class="value" id="modeOfPayment">UPI</span>
+          </div>
+        </div>
+        <div class="right-column">
+          <div class="detail-row">
+            <span class="label">Invoice/Payment Date & Time :</span>
+            <span class="value" id="invoiceDateTime"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">GST No :</span>
+            <span class="value" id="gstNo"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Payment Ref. No. :</span>
+            <span class="value" id="paymentRef"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Customer Details Section -->
+      <div class="customer-details">
+        <div class="left-column">
+          <div class="detail-row">
+            <span class="label">Customer Name :</span>
+            <span class="value" id="customerName"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Jio Number :</span>
+            <span class="value" id="jioNumber"></span>
+          </div>
+        </div>
+        <div class="right-column">
+          <div class="detail-row">
+            <span class="label">Place of Supply :</span>
+            <span class="value" id="placeOfSupply"></span>
+          </div>
+          <div class="detail-row">
+            <span class="label">Address :</span>
+            <span class="value" id="address"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Items Table -->
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Sr. No.</th>
+            <th>Plan Details</th>
+            <th>SAC</th>
+            <th>Qty</th>
+            <th>MRP/Unit(₹)</th>
+            <th>Discount(₹)</th>
+            <th>Taxable Amount(₹)</th>
+          </tr>
+        </thead>
+        <tbody id="itemsBody">
+          <!-- Items will be rendered by script.js from invoiceData.items -->
+        </tbody>
+      </table>
+
+      <!-- Terms and Conditions -->
+      <div class="terms">
+        <p>Telecommunication services to be provided by Reliance Jio Infocomm Limited</p>
+        <p>All disputes are subjected to Mumbai Jurisdiction</p>
+        <p>Tax is not payable under Reverse Charge basis for this supply.</p>
+        <br>
+        <p>Declaration : Certified that all the particulars given above are true and correct</p>
+      </div>
+
+      <!-- Signature Section -->
+      <div class="signature-section">
+        <div class="signature-box">
+          <div class="signature-text">
+            Printed On : 01 Oct 2025 RELIANCE RETAIL LIMITED<br>
+            Date: 2025-10-01 17:12:38 IST<br>
+            Reason: Invoice<br>
+            Location: 33 Tamil Nadu
+          </div>
+        </div>
+
+        <div class="authorized-signatory">
+          Authorized Signatory
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p><strong>Registered Office:</strong> Reliance Retail Limited 3rd floor, Court House, Lokmanya Tilak Marg,
+          Dhobi
+          Talao, Mumbai - 400002</p>
+        <p><strong>CIN:</strong> U01100MH1999PLC120563 www.relianceretail.com</p>
+      </div>
+    </div>
+
+    <div id="fuelInvoice" class="invoice-container fuel-invoice hidden">
+      <div class="fuel-header">
+        <div class="fuel-logo">
+          <img src="bpcl_logo.png" class="fuel-logo-img" alt="BPCL Logo">
+        </div>
+        <div class="station-name" id="dispFuelStationName"></div>
+        <div class="fuel-address" id="dispFuelStationAddr"></div>
+        <div class="fuel-contact">Tel. No.: <span id="dispFuelTel"></span></div>
+      </div>
+
+      <div class="fuel-body">
+        <div class="fuel-row">
+          <span class="f-label">Inv. No</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelInvNo"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Date</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelDate"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Time</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelTime"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">FIP No.</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelFipNo"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Nozzle No.</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelNozzleNo"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Product</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelProduct"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Density</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelDensity"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Rate</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelRate"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Volume</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelVolume"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Amount</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelAmount"></span>
+        </div>
+        
+        <div class="fuel-divider"></div>
+        
+        <div class="fuel-row">
+          <span class="f-label">Vehicle No</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelVehicleNo"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">Mobile No</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelMobileNo"></span>
+        </div>
+        
+        <div class="fuel-divider"></div>
+
+        <div class="fuel-row">
+          <span class="f-label">LST No</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelLst"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">CST No</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelCst"></span>
+        </div>
+        <div class="fuel-row">
+          <span class="f-label">VAT No</span>
+          <span class="f-colon">:</span>
+          <span class="f-val" id="dispFuelVat"></span>
+        </div>
+      </div>
+
+      <div class="fuel-footer">
+        <div class="save-fuel-text">SAVE FUEL, SAVE MONEY</div>
+        <div class="thank-you-text">Thank You! Please Visit Again ..</div>
+        <div class="print-time">
+          Printed on : <span id="dispFuelPrintTime"></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Data scripts: Sample first, then local override -->
+    <script src=".sampleInvoiceData.js"></script>
+    <script src=".sampleInvoiceData_local.js" onerror="console.log('No local invoice data override found, using sample data.')"></script>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
